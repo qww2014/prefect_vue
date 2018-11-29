@@ -1,5 +1,5 @@
 <template>
-  <div class="app-ProductInfo">
+  <div class="app-ProductInfo" v-if="productlist.length>0?true:false">
     <div class="p-20 top_img">
       <img :src="productlist[id-1].img_url">
     </div>
@@ -19,9 +19,22 @@
     <div class="p-20">
       <p class="describe1">产品描述：</p>
       <p class="describe2">产品特点与功效：</p>
-      <p>
-    　　有效去除空调蒸发器上的油及其它污染物，消除空气异味；自动分散空调上的固体粉尘；在空调蒸发器的翅片上形成保护膜，延长空调使用寿命；防止滤光板和金属框被腐蚀；气味芳香、清新自然；适用于家庭、医院、诊所、食物加工场等空调。
-      </p>
+      <div v-html="productlist[this.id-1].describe" class="describe3">
+        <div>{{productlist[this.id-1].describe}}</div>
+      </div>
+    </div>
+    <div class="footer">
+      <router-link to="/home">
+        <img src="http://127.0.0.1:3000/img/home_qn.png">
+        <p>首页</p>
+      </router-link>
+      <router-link to="/home/login">
+        <img src="http://127.0.0.1:3000/img/cart_qn.png">
+        <p>购物车</p>
+      </router-link>
+      <div @click="toast_login">加入购物车</div>
+      <div @click="toast_login">立即购买</div>
+      <div@click="back_product">上一页</div>
     </div>
   </div>
 </template>
@@ -29,8 +42,7 @@
   export default{
     data(){
       return{
-        productlist:[{img_url:""}],
-        id:0
+        productlist:[],
       }
     },
     methods:{
@@ -38,12 +50,16 @@
         this.$router.push("/home/login")
       },
       getProductList(){
-        var vm = this
-        vm.id = this.$route.params.id;
-        vm.$http.get("productlist?id="+this.id).then(result=>{
-          vm.productlist = result.body
-          console.log(vm.productlist)
+        this.id = this.$route.params.id;
+        this.$http.get("productlist?id="+this.id).then(result=>{
+          this.productlist = result.body
         })
+      },
+      toast_login(){
+        this.$toast('您还没有登录，请登录 ！')
+      },
+      back_product(){
+        this.$router.push("/home/shop")
       }
     },
     created(){
@@ -111,5 +127,40 @@
     color:#595a5a;
     font-size:14px;
     font-weight:bold;
+  }
+  .app-ProductInfo .describe3 p{
+    text-indent:2em;
+  }
+  .app-ProductInfo .footer{
+    border-top:1px solid #ddd;
+    width:100%;
+    display:flex;
+    z-index:11;
+    position:fixed;
+    bottom:0px;
+    background-color:#fff;
+  }
+  .app-ProductInfo .footer a{
+    padding:5px;
+    display:block;
+    width:17%;
+    height:55px;
+    text-align:center;
+    border-right:1px solid #ddd;
+  }
+  .app-ProductInfo .footer div{
+    width:22%;
+    display:flex;
+    align-items:center;
+    color:#fff;
+    font-size:15px;
+    justify-content:center;
+    background-color:#e66529;
+  }
+  .app-ProductInfo .footer div:nth-child(4){
+    background-color:#a93033;
+  }
+  .app-ProductInfo .footer div:last-child{
+    background-color:#911480;
   }
 </style>

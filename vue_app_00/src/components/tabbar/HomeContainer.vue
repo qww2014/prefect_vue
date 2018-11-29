@@ -1,5 +1,5 @@
 <template>
-  <div class="app-HomeContainer">
+  <div class="app-HomeContainer" v-if="logo.length>0?true:false">
   <!-- 顶部搜索栏-->    
     <div class="top">
         <img :src="logo[0].img_url">
@@ -50,7 +50,7 @@
         data(){
             return{
                 imagelist:[],
-                logo:[{img_url:""},{img_url:""},{img_url:""}],
+                logo:[],
                 bagong:[],
                 zuixin:[],
                 imagelist1:[],
